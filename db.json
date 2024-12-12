@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "fname": "John",
+      "lname": "Doe",
+      "email": "john.doe@example.com",
+      "password": "123456"
+    },
+    {
+      "id": "0271",
+      "fname": "Roksana",
+      "lname": "Akter",
+      "email": "roksanakter835@gmail.com",
+      "password": "123456",
+      "cpassword": "123456"
+    },
+    {
+      "id": "f8c1",
+      "firstName": "roksana",
+      "lastName": "akter",
+      "email": "roksanakter835@gmail.com",
+      "password": "123456",
+      "confirmpassword": "123456"
+    }
+  ]
+}

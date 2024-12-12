@@ -1,20 +1,24 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
-    fname: string;
-    lname: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    cpassword: string;
+    confirmpassword: string;
 }
 
 const Registration: React.FC = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
-        fname: '',
-        lname: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
-        cpassword: ''
+        confirmpassword: ''
     });
     const [errors, setErrors] = useState<Partial<FormData>>({});
 
@@ -22,13 +26,13 @@ const Registration: React.FC = () => {
         const newErrors: Partial<FormData> = {};
 
         // First Name Validation
-        if (!formData.fname.trim()) {
-            newErrors.fname = "First Name Required";
+        if (!formData.firstName.trim()) {
+            newErrors.firstName = "First Name Required";
         }
 
         // Last Name Validation
-        if (!formData.lname.trim()) {
-            newErrors.lname = "Last Name Required";
+        if (!formData.lastName.trim()) {
+            newErrors.lastName = "Last Name Required";
         }
 
         // Email Validation
@@ -46,27 +50,39 @@ const Registration: React.FC = () => {
         }
 
         // Confirm Password Validation
-        if (!formData.cpassword.trim()) {
-            newErrors.cpassword = "Confirm Password is Required";
-        } else if (formData.cpassword !== formData.password) {
-            newErrors.cpassword = "Passwords do not match";
+        if (!formData.confirmpassword.trim()) {
+            newErrors.confirmpassword = "Confirm Password is Required";
+        } else if (formData.confirmpassword !== formData.password) {
+            newErrors.confirmpassword = "Passwords do not match";
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
-            alert("Registered Successfully!");
+           try {
+            const response = await axios.post("http://localhost:8000/users",formData)
+            console.log(response);
+            toast.success('Register Successfully');
+            navigate('/login', )
+            
+           } catch (error) {
+            console.error("Error submitting form:", error);
+            toast.error('Failed to register. Please try again.');
+            
+           }
+            
+
             // Optionally reset form
             setFormData({
-                fname: '',
-                lname: '',
+                firstName: '',
+                lastName: '',
                 email: '',
                 password: '',
-                cpassword: ''
+                confirmpassword: ''
             });
             setErrors({});
         }
@@ -86,10 +102,10 @@ const Registration: React.FC = () => {
                             type="text"
                             placeholder="Enter First Name"
                             className="input input-bordered w-full"
-                            value={formData.fname}
-                            onChange={(e) => setFormData({ ...formData, fname: e.target.value })}
+                            value={formData.firstName}
+                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                         />
-                        {errors.fname && <p className="text-red-600 text-sm">{errors.fname}</p>}
+                        {errors.firstName && <p className="text-red-600 text-sm">{errors.firstName}</p>}
                     </div>
 
                     {/* Last Name */}
@@ -101,10 +117,10 @@ const Registration: React.FC = () => {
                             type="text"
                             placeholder="Enter Last Name"
                             className="input input-bordered w-full"
-                            value={formData.lname}
-                            onChange={(e) => setFormData({ ...formData, lname: e.target.value })}
+                            value={formData.lastName}
+                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                         />
-                        {errors.lname && <p className="text-red-600 text-sm">{errors.lname}</p>}
+                        {errors.lastName && <p className="text-red-600 text-sm">{errors.lastName}</p>}
                     </div>
                 </div>
 
@@ -147,10 +163,10 @@ const Registration: React.FC = () => {
                         type="password"
                         placeholder="Confirm Password"
                         className="input input-bordered w-full"
-                        value={formData.cpassword}
-                        onChange={(e) => setFormData({ ...formData, cpassword: e.target.value })}
+                        value={formData.confirmpassword}
+                        onChange={(e) => setFormData({ ...formData, confirmpassword: e.target.value })}
                     />
-                    {errors.cpassword && <p className="text-red-600 text-sm">{errors.cpassword}</p>}
+                    {errors.confirmpassword && <p className="text-red-600 text-sm">{errors.confirmpassword}</p>}
                 </div>
 
                 {/* Submit Button */}
